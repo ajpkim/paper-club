@@ -7,7 +7,11 @@
     <title>{% block title %}PC{% endblock %}</title>
   </head>
   <body>
-<h1>...pApeR cLuB...</h1>
-{% block content %}{% endblock %}
+    <div id="container">
+      {% include "navbar.html" %}
+      <div id="content">
+    {% block content %}{% endblock %}
+      </div>
+    </div>
   </body>
 </html>
