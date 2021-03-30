@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %} login {% endblock title %}
+{% block content %}
+{% if form.errors %}
+<p>No good. Please try again.</p>
+{% endif %}
+
+{% if next %}
+{% if user.is_authenticated %}
+<p>Out of bounds. To proceed, please login with an account that has access here.</p>
+{% else %}
+<p>Please login to participate.</p>
+{% endif %}
+{% endif %}
+
+<form method="post" action="{% url 'accounts:login' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" class="btn btn-primary" value="Login"/>
+  <input type="hidden" name="next" value="{{ next }}" />
+</form>
+{% endblock content %}
