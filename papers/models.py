@@ -5,7 +5,8 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Paper(models.Model):
-    link = models.URLField(max_length=300)
+    url = models.URLField(max_length=50)
+    pdf_url = models.URLField(max_length=50, default="")
     title = models.CharField(max_length=500)
     authors = models.ManyToManyField('Author', through='PaperAuthor')
     abstract = models.CharField(max_length=1000)

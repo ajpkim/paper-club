@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Paper{% endblock %}
+
+{% block content %}
+  <h2>{{ paper.title }}</h2>
+  <ul>
+    {% for author in paper.authors.all %}
+    <li>{{ author }}</li>
+    {% endfor %}
+  </ul>
+  {% endblock %}
+  
