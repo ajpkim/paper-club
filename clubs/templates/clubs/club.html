@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}{{ club.name }}{% endblock title %}
+{% block content %}
+
+<h2>{{ club.name }}</h2>
+
+<h3>Members:</h3>
+<ul>
+
+  {% for member in club.users.all %}
+  <li>{{ member }}</li>
+  {% endfor %}
+</ul>
+
+{% endblock content %}

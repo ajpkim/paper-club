@@ -1,9 +1,13 @@
 <div id="navBar">
-  <a href="{% url 'pages:pages-home' %}">Home</a> |
-  <a href="{% url 'pages:pages-about' %}">About</a>
+  <a href="{% url 'pages:home' %}">Home</a> |
+  <a href="{% url 'pages:about' %}">About</a> |
   {% if user.is_authenticated %}
-  | <a href="{% url 'logout' %}">Log out</a>
+  <a href="{% url 'papers:home' %}">Papers</a> |
+  <a href="{% url 'clubs:home' %}">Clubs</a> |
+
+  <a href="{% url 'logout' %}">Log out</a>
   {% else %}
-  | <a href="{% url 'accounts:accounts-register' %}">Join</a>
+  <a href="{% url 'login' %}">Login</a> |
+  <a href="{% url 'accounts:register' %}">Join</a>
   {% endif %}
 </div>

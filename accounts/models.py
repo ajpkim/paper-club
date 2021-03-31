@@ -21,7 +21,6 @@ class MyUserManager(BaseUserManager):
 class User(AbstractBaseUser):
     username = models.CharField(max_length=30, unique=True)
     email = models.EmailField(max_length=255, blank=True)
-    # date_joined = models.
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
@@ -30,7 +29,7 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = ['email']  # Used for prompt when creating superuser
 
     def __str__(self):
-        return self.email
+        return self.username
 
     def has_perm(self, perm, obj=None):
         return True

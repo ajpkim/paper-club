@@ -3,15 +3,26 @@
     /* Set 1rem == 10px */
     font-size: 62.5%;
 
-    /* Variables */
-    --main-bg-color: pink;
+    /* Colors */
+    --c-purple: #CC33FF;
+    --c-lightblue: #8dc2ee;
+
+    
+    /* Semantic */
+    --bg-color: skyblue;
+    --c-link: var(--c-lightblue);
+    --c-navBar-a: var(--c-purple);
+    --c-main-text: black;
+
 }
 
-
+html {   
+    /* background-color: var(--main-bg-color); */
+}
 
 #container {
     max-width: 850px;
-    margin: 25px auto 0px auto; 
+    margin: 25px auto 0px auto;
 }
 
 #content {
@@ -20,6 +31,7 @@
 
 body {
     font-size: 1.8rem;
+    /* background: var(--main-bg-color); */
 }
 
 h1 {
@@ -39,5 +51,24 @@ h5 {
     font-size: 2rem;
 }
 
-	
+a {
+    color: var(--main-text);
+    text-decoration: underline var(--c-link) 2px;
+}
 
+
+
+/* navBar */
+
+#navBar a {
+    font-size: 2.5rem;
+    color: var(--c-navBar-a);
+    text-decoration: none;
+    
+}
+    
+
+
+
+
+    
