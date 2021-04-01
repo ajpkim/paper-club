@@ -8,9 +8,9 @@ class Paper(models.Model):
     url = models.URLField(max_length=50)
     pdf_url = models.URLField(max_length=50, default="")
     title = models.CharField(max_length=500)
-    authors = models.ManyToManyField('Author', through='PaperAuthor')
+    authors = models.ManyToManyField('Author', through='AuthorPaper')
     abstract = models.CharField(max_length=1000)
-    key_words = models.ManyToManyField('KeyWord', through='PaperKeyWord')
+    key_words = models.ManyToManyField('KeyWord', through='KeyWordPaper')
     pub_date = models.DateField()
 
     def __str__(self):
@@ -19,18 +19,18 @@ class Paper(models.Model):
 
 class Author(models.Model):
     name = models.CharField(max_length=50)
-    papers = models.ManyToManyField('Paper', through='PaperAuthor')
+    papers = models.ManyToManyField('Paper', through='AuthorPaper')
 
     def  __str__(self):
         return self.name
 
 
-class PaperAuthor(models.Model):
-    paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
+class AuthorPaper(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
 
     def  __str__(self):
-        return f'Authorship: {self.author} ---> {self.paper}'
+        return f'{self.author}: {self.paper}'
 
 class KeyWord(models.Model):
     key_word = models.CharField(max_length=30)
@@ -39,12 +39,12 @@ class KeyWord(models.Model):
         return self.key_word
 
 
-class PaperKeyWord(models.Model):
-    paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
+class KeyWordPaper(models.Model):
     key_word = models.ForeignKey(KeyWord, on_delete=models.CASCADE)
+    paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
 
     def  __str__(self):
-        return f'{self.key_word} ---> {self.paper}'
+        return f'{self.key_word}: {self.paper}'
 
 
 # TODO: Create Club model in the Clubs app

@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from .models import Author, KeyWord, Paper, PaperAuthor, PaperKeyWord
+from .models import Author, AuthorPaper, KeyWord, KeyWordPaper, Paper
 
-admin.site.register([Author, KeyWord, Paper, PaperAuthor, PaperKeyWord])
+admin.site.register([Author, AuthorPaper, KeyWord, KeyWordPaper, Paper])

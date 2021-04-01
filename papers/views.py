@@ -5,24 +5,24 @@ import re
 import feedparser
 
 from django.http import HttpResponse, HttpResponseRedirect
-# from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-# from django.views import View
-from django.views.generic import CreateView, FormView, ListView
+from django.views.generic import CreateView, DetailView, FormView, ListView
 
-from .models import Paper
+from .models import Author, AuthorPaper, Paper
 from .forms import ArxivURLForm
 
+# TODO Change HomeView to include the add paper form instead of button
 class HomeView(ListView):
     template_name = 'papers/home.html'
     context_object_name = 'papers_list'  # TODO: Change to recent
 
-    # TODO: Convert this to return the most recent papers by proposal date
+    # TODO Convert this to return the most recent papers by proposal date
     # May need to use Proposals to do this and then return the unique papers
     def get_queryset(self):
         return Paper.objects.all()
     
-class PaperDetailView(ListView):
+
+class PaperDetailView(DetailView):
     model = Paper
 
     def get_context_data(self, **kwargs):
@@ -45,18 +45,37 @@ class AddPaperView(FormView):
                       pub_date=data.published,
                       pdf_url=get_pdf_url(data),
                       )
-        
-        return HttpResponseRedirect(form.cleaned_data['url'])
 
+        # TODO: check if paper exists before creating
+        paper.save()
+        process_new_paper(paper, data)
+        
+        return HttpResponseRedirect(reverse('papers:paper-detail', kwargs={'pk': paper.id}))
+
+
+# TODO
+# class AddConfirmView(View):
+# def AddConfirmView(request):
+#     def get(self, request):
+#         pass
+
+# TODO add keywords
+def process_new_paper(paper, data):
+    for a in data.authors:
+        author = Author(name=a)
+        author.save()
+        author_paper = AuthorPaper(paper=paper, author=author)
+        author_paper.save()
+
+        
     
 ########## arXiv API functions ##########
 def get_pdf_url(data):
     """Extract the pdf url from arXiv API response"""
-    pdf_url = ""
     for link in data.links:
         if ('title', 'pdf') in link.items():
-            pdf_url = link['href']
-    return pdf_url
+            return link['href']
+    return ''
 
 # TODO: Use single regex
 def clean_arxiv_paper_data(data):
@@ -69,7 +88,10 @@ def clean_arxiv_paper_data(data):
 
     data.title = remove_new_lines(data.title)
     data.summary = remove_new_lines(data.summary)
-
+    # Convert "YYYY-MM-DDTHH:MM:SSZ" to "YYYY-MM-DD"
+    data.published = data.published[0:9]
+    # Extract author names
+    data.authors = [author['name'] for author in data.authors]
     return data
 
 def get_arxiv_paper_data(url):
@@ -86,7 +108,6 @@ def get_arxiv_paper_data(url):
     response = libreq.urlopen(query)
     feed = feedparser.parse(response)
     data = feed.entries[0]
-    data.summary = data.summary.replace("\n", " ")
     return clean_arxiv_paper_data(data)
 
 

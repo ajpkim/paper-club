@@ -1,12 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}Papers{% endblock title %}
 {% block content %}
-
+{% include 'papers/add-btn.html' %}
+<!-- Placeholder list content -->
 <ul>
-{% for paper in papers_list %}
-
-<li><a href="{{ paper.link }}">{{ paper }}</a></li>
-
+  {% for paper in papers_list %}
+  <li><a href="{% url 'papers:paper-detail' paper.id %}">{{ paper }}</a></li>
+</ul>
 {% endfor %}
-
 {% endblock content %}

@@ -3,11 +3,17 @@
 {% block title %}Paper{% endblock %}
 
 {% block content %}
-  <h2>{{ paper.title }}</h2>
+<h2>{{ paper.title }}</h2>
+<p>{{ paper.pub_date }}</p>
+
+<h3>Authors</h3>
   <ul>
     {% for author in paper.authors.all %}
     <li>{{ author }}</li>
     {% endfor %}
   </ul>
+  <h3>Abstract</h3>
+<p>{{ paper.abstract }}</p>
+
   {% endblock %}
   

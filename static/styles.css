@@ -4,6 +4,8 @@
     font-size: 62.5%;
 
     /* Colors */
+    --c-lightgreen: #DCFAE1;
+    --c-green: #91F7A4;
     --c-purple: #CC33FF;
     --c-lightblue: #8dc2ee;
 
@@ -26,7 +28,7 @@ html {
 }
 
 #content {
-    padding-top: 2rem;
+    padding-top: 4rem;
 }
 
 body {
@@ -56,10 +58,13 @@ a {
     text-decoration: underline var(--c-link) 2px;
 }
 
-
+#add-paper-btn {
+    background-color: var(--c-lightgreen);
+    font-size: 2.5rem;
+    /* font-weight: semibold; */
+}
 
 /* navBar */
-
 #navBar a {
     font-size: 2.5rem;
     color: var(--c-navBar-a);
