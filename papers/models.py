@@ -6,17 +6,18 @@ User = get_user_model()
 
 class Paper(models.Model):
     url = models.URLField(max_length=50)
-    pdf_url = models.URLField(max_length=50, default="")
+    pdf_url = models.URLField(max_length=50)
+    arxiv_id = models.CharField(max_length=20)
     title = models.CharField(max_length=500)
     authors = models.ManyToManyField('Author', through='AuthorPaper')
     abstract = models.CharField(max_length=1000)
     key_words = models.ManyToManyField('KeyWord', through='KeyWordPaper')
-    pub_date = models.DateField()
+    published = models.DateField()
 
     def __str__(self):
         return self.title
 
-
+    
 class Author(models.Model):
     name = models.CharField(max_length=50)
     papers = models.ManyToManyField('Paper', through='AuthorPaper')

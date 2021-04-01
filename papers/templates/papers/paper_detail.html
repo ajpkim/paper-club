@@ -4,7 +4,8 @@
 
 {% block content %}
 <h2>{{ paper.title }}</h2>
-<p>{{ paper.pub_date }}</p>
+<b><a href="{{ paper.pdf_url }}">PDF</a></b>
+<p>{{ paper.published }}</p>
 
 <h3>Authors</h3>
   <ul>

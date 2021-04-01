@@ -6,6 +6,7 @@
 <ul>
   {% for paper in papers_list %}
   <li><a href="{% url 'papers:paper-detail' paper.id %}">{{ paper }}</a></li>
+
+  {% endfor %}
 </ul>
-{% endfor %}
 {% endblock content %}
