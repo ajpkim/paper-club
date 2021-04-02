@@ -13,6 +13,7 @@ class HomeView(ListView):
         user_clubs = [x.club for x in UserClub.objects.filter(user=user)]
         return user_clubs
 
+    
 class ClubView(TemplateView):
     pass
     

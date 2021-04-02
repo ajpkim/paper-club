@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'clubs.apps.ClubsConfig',
     'pages.apps.PagesConfig',
     'papers.apps.PapersConfig',
+    'voting.apps.VotingConfig',
     
     # Django apps
     'django.contrib.admin',

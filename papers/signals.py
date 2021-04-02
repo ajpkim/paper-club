@@ -9,3 +9,10 @@ User = get_user_model()
 @receiver(post_save, sender=Paper)
 def process_paper(sender, instance, created, **kwargs):
     pass
+
+
+# TODO Listen for end of an election and turn off the candidacy flag for each of the Proposal for the election
+# @receiver()
+def remove_candidacy_flag(sender, instance, created, **kwargs):
+    pass
+    
