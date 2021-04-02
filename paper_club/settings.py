@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'clubs.apps.ClubsConfig',
     'pages.apps.PagesConfig',
     'papers.apps.PapersConfig',
+    'profiles.apps.ProfilesConfig',
     'voting.apps.VotingConfig',
     
     # Django apps
@@ -134,6 +135,7 @@ STATICFILES_DIRS = [
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
+AUTH_PROFILE_MODEL = 'profiles.Profile'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
