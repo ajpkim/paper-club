@@ -1,0 +1,9 @@
+
+<h2>Vote!</h2>
+
+<ul>
+{% for candidate in candidates %}
+<li><a href="{% url 'papers:paper-detail' candidate.id %}">{{ candidate }}</a></li>
+{% endfor %}
+</ul>
+

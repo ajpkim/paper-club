@@ -2,14 +2,40 @@
 {% block title %}{{ club.name }}{% endblock title %}
 {% block content %}
 
-<h2>{{ club.name }}</h2>
+<h1>{{ club.name }}</h1>
 
-<h3>Members:</h3>
+
+<button type="submit" id="add-paper-btn" onclick="location.href='{% url 'papers:add' %}'">Add a Paper</button>
+
+<!-- <details> -->
+<!--   <summary>Add a Paper</summary> -->
+<!-- </details> -->
+
+<br>
+<br>
+
+<details>
+  <summary><b>Members</b></summary>
 <ul>
-
   {% for member in club.users.all %}
   <li>{{ member }}</li>
   {% endfor %}
 </ul>
+</details>
+
+
+{% if election %}
+{% include 'clubs/vote.html' %}
+{% endif %}
+
+
+{% if unscored_proposals %}
+{% include 'clubs/score.html' %}
+{% endif %}
+
+
+{% include 'clubs/proposals.html' %}
+
+
 
 {% endblock content %}
