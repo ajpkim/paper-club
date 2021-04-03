@@ -18,9 +18,9 @@ class Club(models.Model):
         """Return an active election instance or None if there isn't one"""
         return Election.objects.filter(club=self, end_date__gte=datetime.now()).first()
     
-    @property
-    def candidates(self):
-        return Candidate.objects.filter(election=self.election)
+    # @property
+    # def candidates(self):
+    #     return Candidate.objects.filter(election=self.election)
 
     @property
     def proposals(self):

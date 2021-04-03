@@ -4,9 +4,13 @@
     font-size: 62.5%;
 
     /* Colors */
+    --c-cream: #FFFDD0;
+    --c-lightgrey: #CCCCFF;
     --c-lightgreen: #DCFAE1;
     --c-green: #91F7A4;
+    --c-grey: #CCCCCC;
     --c-purple: #CC33FF;
+    /* --c-purple: rebeccapurple; */
     --c-lightblue: #8dc2ee;
 
     
@@ -71,9 +75,47 @@ a {
     text-decoration: none;
     
 }
+
+
+#voteContainer {
+    margin: 2rem;
+    padding: 1rem;
+    /* display: flex; */
+    background-color: var(--c-lightgrey);
     
+}
+
+#voteForm  {
+    /* width: 10rem; */
+}
+
+#voteContainer a{
+    /* margin: 2rem; */
+    padding: 1rem;
+    /* display: flex; */
+}
+
+/* #voteForm .helptext { */
+/*     text-align: ; */
+/* } */
+
+/* input { */
+/*     display: inline; */
+/* } */
+
+input[type='number'] {
+    /* background-color: rebeccapurple; */
+    width: 5rem;
+    text-align: center;
+    display: inline;
+}
 
 
 
+/* helptext { */
+/*     color: red; */
 
-    
+/* } */
+/* input[type='submit'] { */
+/*     color: red; */
+/* } */

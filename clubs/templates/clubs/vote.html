@@ -1,9 +1,17 @@
 
 <h2>Vote!</h2>
 
-<ul>
-{% for candidate in candidates %}
-<li><a href="{% url 'papers:paper-detail' candidate.id %}">{{ candidate }}</a></li>
-{% endfor %}
-</ul>
+<div id="voteContainer">
+  <form method="POST" id="voteForm"  name="voteForm">
+    {% csrf_token %}
+    {{ vote_form.as_table}}
+    <button type="submit">Vote</button>
+  </form>
 
+  <div id="candidates">
+    {% for i, candidate in candidates.items %}
+    <p><b>{{ i }}:</b> <a href="{% url 'papers:paper-detail' candidate.paper.id %}">{{ candidate.paper.title }}</a>
+
+    {% endfor %}
+  </div>
+</div>
