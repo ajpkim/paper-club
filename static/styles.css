@@ -76,7 +76,7 @@ a {
     
 }
 
-
+/* Voting box */
 #voteContainer {
     margin: 2rem;
     padding: 1rem;
@@ -85,7 +85,9 @@ a {
     
 }
 
-#voteForm  {
+#voteForm label {
+    font-weight: bold;
+    padding-right: 1rem;
     /* width: 10rem; */
 }
 
@@ -95,27 +97,15 @@ a {
     /* display: flex; */
 }
 
-/* #voteForm .helptext { */
-/*     text-align: ; */
-/* } */
-
-/* input { */
-/*     display: inline; */
-/* } */
-
-input[type='number'] {
-    /* background-color: rebeccapurple; */
-    width: 5rem;
-    text-align: center;
-    display: inline;
+#voteForm button[type='submit'] {
+    background-color: var(--c-lightgreen);
+    margin-left: 3rem;
 }
 
 
+#add-proposal-form input[type='text'] {
 
-/* helptext { */
-/*     color: red; */
-
-/* } */
-/* input[type='submit'] { */
-/*     color: red; */
-/* } */
+    height: 10rem;
+    width: 30rem;
+}
+    

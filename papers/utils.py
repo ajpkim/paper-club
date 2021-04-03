@@ -73,3 +73,10 @@ def get_arxiv_paper_data(url):
     data['url'] = base + 'abs/' + arxiv_id
     data['pdf_url'] = base + 'pdf/' + arxiv_id + '.pdf'
     return clean_arxiv_paper_data(data)
+
+
+def process_paper_url(url):
+    data = get_arxiv_paper_data(url)
+    paper, authors = process_arxiv_data(data)
+    return paper, authors
+    

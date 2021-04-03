@@ -13,6 +13,15 @@ class Club(models.Model):
     name = models.CharField(max_length=50, unique=True)
     users = models.ManyToManyField(User, through='ClubMember')
 
+    def get_club_info(self):
+        return {'club': self,
+                }
+                
+        
+    # def get_club_forms(self):
+    #     return {'voteForm': VoteForm(
+                
+    
     @property
     def election(self):
         """Return an active election instance or None if there isn't one"""

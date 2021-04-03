@@ -4,7 +4,7 @@ from django.views.generic import CreateView, DetailView, FormView, ListView
 
 from .models import Author, AuthorPaper, Paper
 from .forms import ArxivURLForm
-from .utils import get_arxiv_paper_data, process_arxiv_data
+from .utils import get_arxiv_paper_data, process_arxiv_data, process_paper_url
 
 # TODO Change HomeView to include the add paper form instead of button
 class HomeView(ListView):
@@ -33,8 +33,7 @@ class AddPaperView(FormView):
 
     def form_valid(self, form):
         url = form.cleaned_data['url']
-        data = get_arxiv_paper_data(url)
-        paper, authors = process_arxiv_data(data)
+        paper, authors = process_paper_url(url)
         return HttpResponseRedirect(reverse('papers:paper-detail', kwargs={'pk': paper.id}))
 
 

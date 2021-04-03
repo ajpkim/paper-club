@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Proposal{% endblock %}
+{% block content %}
+<h2>Propose a Paper</h2>
+  <form method="POST" id="add-proposal-form" name="add-proposal-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="Submit">Add</button>
+  </form>
+  {% endblock %}
