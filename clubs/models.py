@@ -1,12 +1,18 @@
 from datetime import datetime, timedelta
 
+
+from django.utils import timezone
+
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
 from papers.models import Paper
 
 User = get_user_model()
+
+# datetime.now(tz=settings.TIME_ZONE)
 
 class Club(models.Model):
 
@@ -25,7 +31,7 @@ class Club(models.Model):
     @property
     def election(self):
         """Return an active election instance or None if there isn't one"""
-        return Election.objects.filter(club=self, end_date__gte=datetime.now()).first()
+        return Election.objects.filter(club=self, end_date__gte=timezone.now()).first()
     
     # @property
     # def candidates(self):
@@ -66,13 +72,14 @@ class Proposal(models.Model):
     total_score = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'{self.club} Proposal: {self.paper}'
+        return f'{self.paper}'
+        # return f'{self.paper} (proposed: {self.submission_date.strftime("%Y-%m-%d")})'
 
     
 class Election(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     start_date = models.DateTimeField(auto_now_add=True)
-    end_date = models.DateTimeField(default=(datetime.now() + timedelta(days=+2)))
+    end_date = models.DateTimeField(default=(timezone.now() + timedelta(days=+2)))
     candidates = models.ManyToManyField(Proposal, through="Candidate")
     winner = models.ForeignKey(Paper, null=True, on_delete=models.SET_NULL)
 
@@ -96,7 +103,7 @@ class Score(models.Model):
     submission_date = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f'(score) {self.score}: {self.proposal.paper}'
+        return f'Score {self.score}: {self.proposal.paper}'
     
 
 class Vote(models.Model):

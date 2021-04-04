@@ -62,6 +62,12 @@ a {
     text-decoration: underline var(--c-link) 2px;
 }
 
+
+
+li {
+    line-height: 3rem;
+}
+
 #add-paper-btn {
     background-color: var(--c-lightgreen);
     font-size: 2.5rem;
