@@ -8,7 +8,7 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.urls import reverse
 
 from papers.forms import validate_arxiv_url
-from .utils import get_user_clubs
+# from .utils import get_user_clubs
 
 User = get_user_model()
 SCORE_OPTIONS = [(str(n), n) for n in range(1, 6)]
@@ -24,6 +24,7 @@ SCORE_OPTIONS = [(str(n), n) for n in range(1, 6)]
 #             )
 
 
+
 class VoteForm(forms.Form):
     """
     Dynamic form that generates a voting ballot based on the given election.
@@ -33,12 +34,13 @@ class VoteForm(forms.Form):
         self.candidates = election.candidates.all()
 
         for i, candidate in enumerate(self.candidates, 1):
-            self.fields[f'candidate_{i}'] = forms.ChoiceField(label=string.ascii_uppercase[i-1],
+            self.fields[f'vote_{i}'] = forms.ChoiceField(label=string.ascii_uppercase[i-1],
                                                                choices=SCORE_OPTIONS)
-    #         self.fields[f'proposal_{candidate.id}'] = forms.ChoiceField(label=string.ascii_uppercase[i-1],
-    #                                                           choices=self.get_choices())
-    # def get_choices(self):
-    #     return [(n, n) for n, candidate in enumerate(self.candidates, 1)]
+            self.fields[f'candidate_{i}_id'] = forms.CharField(widget=forms.HiddenInput(), initial=candidate.id)
+
+        self.fields['election_id'] = forms.CharField(widget=forms.HiddenInput(), initial=election.id)
+        self.fields['club'] = forms.CharField(widget=forms.HiddenInput(), initial=election.club.name)
+        
 
 class ScoreForm(forms.Form):
     """
@@ -47,7 +49,7 @@ class ScoreForm(forms.Form):
     def __init__(self, proposal, *args, **kwargs):
         super(ScoreForm, self).__init__(*args, **kwargs)
         self.proposal = proposal
-        proposal = forms.ChoiceField(label=proposal.title,
+        score = forms.ChoiceField(label=proposal.title,
                                      choices=SCORE_OPTIONS)
 
 
@@ -58,7 +60,9 @@ class ProposalForm(forms.Form):
                          validators=[validate_arxiv_url]
                          )
     score = forms.ChoiceField(label="Score", choices=SCORE_OPTIONS)
-    message = forms.CharField(max_length=300)  # TODO make this not necessary i.e. blank=True
+    message = forms.CharField(widget=forms.Textarea(attrs={'rows':3}))
+
+    # TODO make this not necessary i.e. blank=True
 
 
 

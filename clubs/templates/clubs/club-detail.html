@@ -23,10 +23,15 @@
 </ul>
 </details>
 
+{% if club.reading %}
+<h2>Current Reading</h2>
+<p><a href="{% url 'papers:paper-detail' club.reading.id %}">{{ club.reading }}</p>
+{% endif %}
 
-{% if election %}
+{% if election and not voted %}
 {% include 'clubs/vote.html' %}
 {% endif %}
+
 
 
 {% if unscored_proposals %}

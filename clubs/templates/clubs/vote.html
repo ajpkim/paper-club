@@ -1,8 +1,8 @@
 
-<h2>Vote!</h2>
+<h2>Vote</h2>
 
-<div id="voteContainer">
-  <form method="POST" id="voteForm"  name="voteForm">
+<div id="vote-container">
+  <form method="POST" id="vote-form"  name="vote-form">
     {% csrf_token %}
     {{ vote_form.as_table}}
     <button type="submit">Vote</button>

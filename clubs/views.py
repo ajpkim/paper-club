@@ -9,9 +9,9 @@ from django.views.generic import FormView, ListView, TemplateView
 
 from papers.utils import process_paper_url
 
-from .models import Club, ClubMember, Score, Proposal
+from .models import Club, ClubMember, Score, Proposal, Vote
 from .forms import ProposalForm, VoteForm
-from .utils import get_candidates_dict, get_user_clubs, get_unscored_proposals
+# from .utils import get_candidates_dict, get_user_clubs, get_unscored_proposals
 
 
 
@@ -31,17 +31,7 @@ class ClubDetailView(View):
 
     def get_context_data(self, **kwargs):
         club = self.get_object()
-        user = self.request.user
-        ctx = {'club': club,
-               'election': club.election,
-               'unscored_proposals': get_unscored_proposals(club, user),
-               'top_proposals': club.top_proposals,
-               }
-    
-        if club.election:
-            ctx['candidates'] = get_candidates_dict(club)
-            ctx['vote_form'] = VoteForm(election=club.election)
-
+        ctx = club.get_club_ctx(self.request.user)
         return ctx
 
     def get(self, request, *args, **kwargs):
@@ -49,9 +39,14 @@ class ClubDetailView(View):
 
     # TODO process forms appriorately
     def post(self, request, *args, **kwargs):
-        breakpoint()
-        print(f'POSTING FORM!!!\n\n{request}')
-        pass
+        ### Process the VoteForm if that's whats in POST
+        if 'election_id' in request.POST:
+            Vote.objects.process_vote_form(request)
+        ### Process the ScoreForm if that's what's in POST
+        elif 'score' in request.POST:
+            pass
+        
+        return HttpResponseRedirect('')
     
 
 # TODO try using a VoteFormView and ScoreFormView to handle
@@ -82,7 +77,7 @@ class ProposalView(FormView):
     def get_form_kwargs(self):
         kwargs = super(ProposalView, self).get_form_kwargs()
         kwargs['user'] = self.request.user
-        kwargs['clubs'] = get_user_clubs(self.request.user)
+        kwargs['clubs'] = self.request.user.profile.clubs
         return kwargs
 
     def form_valid(self, form):

@@ -83,7 +83,7 @@ li {
 }
 
 /* Voting box */
-#voteContainer {
+#vote-container {
     margin: 2rem;
     padding: 1rem;
     /* display: flex; */
@@ -91,27 +91,27 @@ li {
     
 }
 
-#voteForm label {
+#vote-form label {
     font-weight: bold;
     padding-right: 1rem;
+    padding-left: 1rem;
     /* width: 10rem; */
+    text-align: right;
 }
 
-#voteContainer a{
+#vote-container a{
     /* margin: 2rem; */
     padding: 1rem;
     /* display: flex; */
 }
 
-#voteForm button[type='submit'] {
+#vote-form button[type='submit'] {
     background-color: var(--c-lightgreen);
     margin-left: 3rem;
 }
 
 
-#add-proposal-form input[type='text'] {
+#add-proposal-form {
 
-    height: 10rem;
-    width: 30rem;
 }
     
