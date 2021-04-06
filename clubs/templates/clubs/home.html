@@ -2,7 +2,14 @@
 {% block title %}Clubs{% endblock title %}
 {% block content %}
 
-<h2>Clubs</h2>
+
+<div id="club-btns-container">
+    <button type="submit" id="join-club-btn" onclick="location.href='{% url 'clubs:join-club' %}'">Join Club</button>
+  <button type="submit" id="create-club-btn" onclick="location.href='{% url 'clubs:create-club' %}'">Create Club</button>
+
+  </div>
+
+<h2>My Clubs</h2>
 <ul>
   {% for club in user_clubs %}
   <li><a href="{% url 'clubs:club-detail' club.name  %}">{{ club }}</a></li>

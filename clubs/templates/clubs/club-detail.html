@@ -33,8 +33,9 @@
 {% endif %}
 
 
+{% if club.proposals.all %}
 {% include 'clubs/top-proposals.html' %}
-
+{% endif %}
 
 
 {% endblock content %}

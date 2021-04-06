@@ -16,7 +16,9 @@ User = get_user_model()
 class Club(models.Model):
 
     name = models.CharField(max_length=50, unique=True)
+    password = models.CharField(max_length=50)
     members = models.ManyToManyField(User, through='ClubMember')
+
 
     @property
     def meeting(self):
@@ -124,6 +126,8 @@ class Election(models.Model):
                }
         if not self.is_over and not ctx['voted']:
             ctx['vote_form'] = VoteForm(election=self)
+            ctx['voteform_fields_candidates_zip'] = list(zip(self.candidates.all(),
+                                                             ctx['vote_form'].visible_fields()))
 
         return ctx
 

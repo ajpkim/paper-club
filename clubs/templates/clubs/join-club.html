@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Join a Reading Club</h1>
+{% if error_msg %}
+<p><b>No match for club/password combo</b></p>
+{% endif %}
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Join">
+</form>
+{% endblock %}

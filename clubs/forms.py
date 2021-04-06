@@ -16,6 +16,28 @@ User = get_user_model()
 low, high = 1, 5
 SCORE_OPTIONS = [(n, n) for n in range(low, high+1)]
 
+
+
+    
+
+class JoinClubForm(forms.Form):
+
+    club = forms.CharField()
+    password = forms.CharField()
+
+    # def __init__(self, *args, **kwargs):
+    #     self.clubs = kwargs.pop('clubs')
+    #     super(JoinClubForm, self).__init__()
+    #     self.fields['club'] = forms.CharField()
+    #     self.fields['password'] = forms.CharField()
+
+    # def clean(self):
+    #     data = self.cleaned_data
+    #     if not Club.objects.filter(name=data['name'], password=data['password']).exist():
+    #         raise VaildationError("No Club matches that combination")
+
+
+
 class VoteForm(forms.Form):
     """
     Dynamic form that generates a voting ballot based on the given election.
@@ -45,25 +67,25 @@ class ScoreForm(forms.Form):
 
 class ProposalForm(forms.Form):
 
-    url = forms.URLField(max_length=50,
-                         label="arXiv paper URL",
-                         validators=[validate_arxiv_url]
-                         )
-    score = forms.ChoiceField(label="Score", choices=SCORE_OPTIONS)
-    message = forms.CharField(widget=forms.Textarea(attrs={'rows':3})) # TODO make this not necessary i.e. blank=True
+    # url = forms.URLField(max_length=50,
+    #                      label="arXiv paper URL",
+    #                      validators=[validate_arxiv_url]
+    #                      )
+    # score = forms.ChoiceField(label="Score", choices=SCORE_OPTIONS)
+    # message = forms.CharField(widget=forms.Textarea(attrs={'rows':3})) # TODO make this not necessary i.e. blank=True
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         super(ProposalForm, self).__init__(*args, **kwargs)
+        self.fields['url'] = forms.URLField(max_length=50,
+                                            label="arXiv paper URL",
+                                            validators=[validate_arxiv_url]
+                                            )
+        self.fields['score'] = forms.ChoiceField(label="Score", choices=SCORE_OPTIONS)
         self.fields['club'] = forms.ChoiceField(choices=[(club, club) for club in self.request.user.profile.clubs])
-
-        # self.fields['message'] = forms.CharField(max_length=300)
-        # self.fields['score'] = forms.ChoiceField(label="Score", choices=SCORE_OPTIONS)
-        # self.fields['url'] = forms.URLField(max_length=50,
-        #                          label="arXiv paper URL",
-        #                          validators=[validate_arxiv_url]
-        #                          )
-
+        self.fields['message'] = forms.CharField(max_length=300)
+        
+        
 
 # TODO validate datetime in future
 
