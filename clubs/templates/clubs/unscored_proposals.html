@@ -1,0 +1,17 @@
+<div id="unscored-proposals-container">
+<h2>Unscored Proposals</h2>
+
+<ul>
+{% for proposal, form in unscored %}
+<li><a href="{% url 'papers:paper-detail' proposal.paper.id %}">{{ proposal.paper }}</a></li>
+
+
+<form method="POST" class="score-proposal-form", name="score-proposal-form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="Submit">Score</button>
+</form>
+
+{% endfor %}
+</ul>
+</div>

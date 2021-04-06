@@ -6,7 +6,7 @@ app_name = 'clubs'
 urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
     path('<str:club_name>/', views.ClubDetailView.as_view(), name='club-detail'),
-    path('<str:club_name>/vote/', views.VoteFormView, name='vote'),
+    path('<str:club_name>/plan', views.PlanMeetingView.as_view(), name='plan-meeting'),
     path('<str:club_name>/proposal/', views.ProposalView.as_view(), name='add-proposal'),
     ]
 

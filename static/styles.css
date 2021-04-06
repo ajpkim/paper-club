@@ -13,11 +13,36 @@
     /* --c-purple: rebeccapurple; */
     --c-lightblue: #8dc2ee;
 
+    /* Color Scheme */
+    --c-grey: #F7F1ED;
+    --c-pink: #FEBEB0;
+    --c-darkgreen: #3D5A5B;
+    --c-darkblue: #2F365F;
     
+    /* Color Scheme 2 */
+    --c-whitepurple: #f4eeff;
+    --c-lighpurple: #dcd6f7;
+    --c-teal: #a6b1e1;
+    --c-darkblue: #424874;
+
+    --c-snow: #f5fefd
     /* Semantic */
-    --bg-color: skyblue;
+    
+    /* --c-bg: var(--c-lightpurple); */
+    --c-bg: Snow;
+    --c-bg: #fffafa;
+    --c-bg: var(--c-cream);
+    --c-bg: var(--c-snow);
+
+    /* --c-bg: var(--c-whitepurple); */
+    
     --c-link: var(--c-lightblue);
     --c-navBar-a: var(--c-purple);
+
+    --c-navBar-a: var(--c-lightpurple);
+    
+    /* --c-navBar-a: var(--c-darkgreen); */
+    
     --c-main-text: black;
 
 }
@@ -37,7 +62,8 @@ html {
 
 body {
     font-size: 1.8rem;
-    /* background: var(--main-bg-color); */
+    background: var(--c-bg);
+    /* background-color: white; */
 }
 
 h1 {
@@ -67,6 +93,14 @@ a {
 li {
     line-height: 3rem;
 }
+
+
+button {
+    background-color: var(--c-bg);
+    background-color: white;
+}
+
+
 
 #add-paper-btn {
     background-color: var(--c-lightgreen);
@@ -114,4 +148,24 @@ li {
 #add-proposal-form {
 
 }
-    
+
+
+/* Scoring Proposals  */
+.score-proposal-form {
+    display: flex;	     
+}
+.score-proposal-form p {
+    padding: 0;
+    margin: 0;
+}
+.score-proposal-form select {
+    /* margin-top: 3rem; */
+    margin: 1rem;
+    height: 3rem;
+    width: 4rem;
+}
+.score-proposal-form button {
+    background: var(--c-bg);
+    margin: 1rem;
+    height: 3rem;
+}

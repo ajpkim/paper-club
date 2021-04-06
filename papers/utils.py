@@ -22,7 +22,7 @@ def process_arxiv_data(data):
     
     if Paper.objects.filter(arxiv_id=data['arxiv_id']).exists():
         paper = Paper.objects.get(arxiv_id=data['arxiv_id'])
-    else:        
+    else:
         paper = Paper.objects.create(url=data.url,
                                      pdf_url=data.pdf_url,
                                      arxiv_id = data.arxiv_id,
@@ -37,7 +37,6 @@ def process_arxiv_data(data):
     return paper, authors
 
 
-########## arXiv API functions ##########
 def clean_arxiv_paper_data(data):
 
     def remove_new_lines(s):
@@ -47,9 +46,7 @@ def clean_arxiv_paper_data(data):
 
     data.title = remove_new_lines(data.title)
     data.summary = remove_new_lines(data.summary)
-    # Convert "YYYY-MM-DDTHH:MM:SSZ" to "YYYY-MM-DD"
-    data.published = data.published[0:9]
-    # Extract author names
+    data.published = data.published.split("T")[0]  # Convert "2021-02-02T04:07:38Z" to "%Y-%m-%d"
     data.authors = [author['name'] for author in data.authors]
     return data
 
@@ -67,13 +64,11 @@ def get_arxiv_paper_data(url):
     query = base +'api/query?id_list=' + arxiv_id
     response = libreq.urlopen(query)
     feed = feedparser.parse(response)
-    
     data = feed.entries[0]
     data['arxiv_id'] = arxiv_id
     data['url'] = base + 'abs/' + arxiv_id
     data['pdf_url'] = base + 'pdf/' + arxiv_id + '.pdf'
     return clean_arxiv_paper_data(data)
-
 
 def process_paper_url(url):
     data = get_arxiv_paper_data(url)

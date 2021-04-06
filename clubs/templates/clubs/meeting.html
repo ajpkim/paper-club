@@ -1,0 +1,22 @@
+<div id="meeting-container">
+  <h2>Next Meeting</h2>
+  <p><b>When: </b>{{ meeting.date_time }}</p>
+  {% if club.election %}
+  {% if voted %}
+  <details>
+    <summary><i>awaiting election results on the following proposals</i></summary>
+    <ul>
+      {% for candidate in election.candidates.all %}
+      <li><a href="{% url 'papers:paper-detail' candidate.paper.id %}">{{candidate.paper}}</li>
+      {% endfor %}
+    </ul>
+  </details>
+  {% else %}
+  {% include 'clubs/vote.html' %}
+  {% endif %}
+  {% else %}
+  <p><b>Paper: </b><a href="{% url 'papers:paper-detail' meeting.paper.id %}">{{ meeting.paper }}</a></p>
+  <p><b>Leader: </b>{{ meeting.leader }}</p>
+  {% endif %}
+</div>
+

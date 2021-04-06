@@ -2,18 +2,19 @@ from django.db.models.signals import post_save
 from django.contrib.auth import get_user_model
 from django.dispatch import receiver
 
-from .models import Vote
+from .models import Meeting, Score, Paper, Vote
 
 User = get_user_model()
     
 
 @receiver(post_save, sender=Vote)
-def process_vote(sender, instance, created, **kwargs):
-    # if ( Vote.objects.filter(election=instance.election).count() ==
-    #      instance.club.members.count() ):
+def count_votes(sender, instance, created, **kwargs):
     election = instance.election
-    if election.club.ballot_count == election.club.members.all().count():
-        election.winner = election.declare_winner()
-        election.save()
-        instance.club.reading = instance.proposal.paper
-        instance.club.save()
+    if election.num_ballots == election.club.members.all().count():
+        election.declare_winner()
+        Meeting.objects.filter(election=election).update(paper=election.winner)
+
+@receiver(post_save, sender=Score)
+def add_score(sender, instance, created, **kwargs):
+    instance.proposal.total_score += int(instance.score)
+    instance.proposal.save()

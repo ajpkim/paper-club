@@ -5,41 +5,35 @@
 <h1>{{ club.name }}</h1>
 
 
-<button type="submit" id="add-proposal-btn" onclick="location.href='{% url 'clubs:add-proposal' club.name %}'">Add Proposal</button>
-
-<!-- <details> -->
-<!--   <summary>Add a Paper</summary> -->
-<!-- </details> -->
-
-<br>
-<br>
-
 <details>
   <summary><b>Members</b></summary>
 <ul>
-  {% for member in club.users.all %}
+  {% for member in club.members.all %}
   <li>{{ member }}</li>
   {% endfor %}
 </ul>
 </details>
+<br>
 
-{% if club.reading %}
-<h2>Current Reading</h2>
-<p><a href="{% url 'papers:paper-detail' club.reading.id %}">{{ club.reading }}</p>
+
+<button type="submit" id="add-proposal-btn" onclick="location.href='{% url 'clubs:add-proposal' club.name %}'">Add Proposal</button>
+
+
+
+
+{% if meeting %}
+{% include 'clubs/meeting.html' %}
+{% else %}
+<button type="submit" id="plan-meeting-btn" onclick="location.href='{% url 'clubs:plan-meeting' club %}'">Plan Meeting</button>
 {% endif %}
-
-{% if election and not voted %}
-{% include 'clubs/vote.html' %}
-{% endif %}
-
 
 
 {% if unscored_proposals %}
-{% include 'clubs/score.html' %}
+{% include 'clubs/unscored_proposals.html' %}
 {% endif %}
 
 
-{% include 'clubs/proposals.html' %}
+{% include 'clubs/top-proposals.html' %}
 
 
 

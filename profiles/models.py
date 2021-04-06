@@ -25,7 +25,6 @@ class Profile(models.Model):
         for club in self.clubs:
             res[club.name] = club.proposals.difference(scored_proposals)
         return res
-        
     
     def __str__(self):
         return f'{self.user.username} Profile'

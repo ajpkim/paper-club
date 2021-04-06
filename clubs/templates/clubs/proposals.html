@@ -1,8 +1,0 @@
-
-<h2>Top Proposals</h2>
-
-<ol>
-{% for proposal in top_proposals %}
-<li><a href="{% url 'papers:paper-detail' proposal.id %}">{{ proposal }}</a></li>
-{% endfor %}
-</ol>
