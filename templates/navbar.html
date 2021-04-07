@@ -1,7 +1,8 @@
 <div id="navBar">
   <a href="{% url 'pages:home' %}">Home</a> |
   {% if user.is_authenticated %}
-  <a href="{% url 'papers:home' %}">Papers</a> |
+  <!-- Papers section in progress... -->
+<!-- <a href="{% url 'papers:home' %}">Papers</a> | -->
   <a href="{% url 'clubs:home' %}">Clubs</a> |
   <a href="{% url 'pages:about' %}">About</a> |
   <a href="{% url 'logout' %}">Log out</a>

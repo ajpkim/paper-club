@@ -13,7 +13,7 @@ from django.views.generic import CreateView, DetailView, FormView, ListView, Tem
 from papers.utils import process_paper_url
 
 from .models import Candidate, Club, ClubMember, Election, Meeting, Score, Proposal, Vote
-from .forms import JoinClubForm, MeetingForm, ScoreForm, ProposalForm, VoteForm
+from .forms import ClubForm, JoinClubForm, MeetingForm, ScoreForm, ProposalForm, VoteForm
 # from .utils import get_candidates_dict, get_user_clubs, get_unscored_proposals
 
 User = get_user_model()
@@ -27,8 +27,8 @@ class HomeView(ListView):
         return [x.club for x in ClubMember.objects.filter(member=self.request.user)]
 
 class ClubCreateView(CreateView):
+    form_class = ClubForm
     model = Club
-    fields = ['name', 'password']
 
     def form_valid(self, form):
         data = form.cleaned_data
@@ -42,15 +42,8 @@ class ClubJoinView(FormView):
     template_name = 'clubs/join-club.html'
     success_url = 'clubs/home'
 
-    # TODO figure out how to do this in forms.py without a circular import for Club
-    # current fix is weak
     def form_valid(self, form):
         data = form.cleaned_data
-
-        if not Club.objects.filter(name=data['club'], password=data['password']).exists():
-            form = JoinClubForm(data)
-            return render(self.request, self.template_name, {'form': form, 'error_msg': True}) 
-
         club = Club.objects.get(name=data['club'])
         if self.request.user not in club.members.all():
             ClubMember.objects.create(club=club, member=self.request.user)
@@ -68,6 +61,10 @@ class ClubDetailView(View):
         ctx = club.get_ctx(self.request.user)
         if ctx['election']:
             ctx.update(**ctx['election'].get_ctx(self.request.user))
+            if not ctx['voted']:
+                ctx['vote_form'] = VoteForm(election=ctx['election'])
+                ctx['voteform_fields_candidates_zip'] = list(zip(ctx['election'].candidates.all(),
+                                                                 ctx['vote_form'].visible_fields()))
         if ctx['unscored_proposals']:
             ctx['unscored'] = list(map(lambda proposal: (proposal, ScoreForm(proposal)), ctx['unscored_proposals']))
             

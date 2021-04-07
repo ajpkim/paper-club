@@ -8,7 +8,7 @@ from django.db import models
 from django.utils import timezone
 
 from papers.models import Paper
-from .forms import VoteForm
+
 
 User = get_user_model()
 
@@ -124,10 +124,11 @@ class Election(models.Model):
                'candidates': dict(zip(string.ascii_uppercase,
                                       [c for c in self.candidates.all()])),
                }
-        if not self.is_over and not ctx['voted']:
-            ctx['vote_form'] = VoteForm(election=self)
-            ctx['voteform_fields_candidates_zip'] = list(zip(self.candidates.all(),
-                                                             ctx['vote_form'].visible_fields()))
+        
+        # if not self.is_over and not ctx['voted']:
+        #     ctx['vote_form'] = VoteForm(election=self)
+        #     ctx['voteform_fields_candidates_zip'] = list(zip(self.candidates.all(),
+        #                                                      ctx['vote_form'].visible_fields()))
 
         return ctx
 

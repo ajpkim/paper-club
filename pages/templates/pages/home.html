@@ -2,10 +2,12 @@
 {% block title %}Paper Club{% endblock %}
 
 {% block content %}
-  <h1>...pApeR cLuB...</h1>
-  {% if user.is_authenticated %}
-  <p>Logged in as: <b>{{ user.username }}</b></p>
-  {% else %}
-  <p>Please <a href="{% url 'login' %}">log in</a> or <a href="{% url 'accounts:register' %}">create an account</a> to participate.</p>
-  {% endif %}
+<h1>Paper Club</h1>
+<h3><i>Improve group reading selections</i></h3>
+
+{% if user.is_authenticated %}
+<!-- <p>Logged in as: <b>{{ user.username }}</b></p> -->
+{% else %}
+<p>Please <a href="{% url 'login' %}">log in</a> or <a href="{% url 'accounts:register' %}">create an account</a> to participate.</p>
+{% endif %}
 {% endblock %}

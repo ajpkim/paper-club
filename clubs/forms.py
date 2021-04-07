@@ -11,6 +11,7 @@ from django.utils import timezone
 
 from papers.forms import validate_arxiv_url
 
+from .models import Club
 
 User = get_user_model()
 low, high = 1, 5
@@ -18,24 +19,24 @@ SCORE_OPTIONS = [(n, n) for n in range(low, high+1)]
 
 
 
+class ClubForm(forms.ModelForm):
+    name = forms.CharField(max_length=50, label="Club Name")
+    password = forms.CharField(max_length=50, widget=forms.PasswordInput)
+    
+    class Meta:
+        model = Club
+        fields = ['name', 'password']
     
 
 class JoinClubForm(forms.Form):
 
     club = forms.CharField()
-    password = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)
 
-    # def __init__(self, *args, **kwargs):
-    #     self.clubs = kwargs.pop('clubs')
-    #     super(JoinClubForm, self).__init__()
-    #     self.fields['club'] = forms.CharField()
-    #     self.fields['password'] = forms.CharField()
-
-    # def clean(self):
-    #     data = self.cleaned_data
-    #     if not Club.objects.filter(name=data['name'], password=data['password']).exist():
-    #         raise VaildationError("No Club matches that combination")
-
+    def clean(self):
+        data = self.cleaned_data
+        if not Club.objects.filter(name=data['club'], password=data['password']).exists():
+            raise ValidationError("No Club matches that combination")
 
 
 class VoteForm(forms.Form):
@@ -67,13 +68,6 @@ class ScoreForm(forms.Form):
 
 class ProposalForm(forms.Form):
 
-    # url = forms.URLField(max_length=50,
-    #                      label="arXiv paper URL",
-    #                      validators=[validate_arxiv_url]
-    #                      )
-    # score = forms.ChoiceField(label="Score", choices=SCORE_OPTIONS)
-    # message = forms.CharField(widget=forms.Textarea(attrs={'rows':3})) # TODO make this not necessary i.e. blank=True
-
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         super(ProposalForm, self).__init__(*args, **kwargs)
@@ -84,11 +78,9 @@ class ProposalForm(forms.Form):
         self.fields['score'] = forms.ChoiceField(label="Score", choices=SCORE_OPTIONS)
         self.fields['club'] = forms.ChoiceField(choices=[(club, club) for club in self.request.user.profile.clubs])
         self.fields['message'] = forms.CharField(max_length=300)
-        
-        
 
+        
 # TODO validate datetime in future
-
 # def validate_meeting_date(date):
 #     if date < (timezone.now() + timedelta(days=+1)).date():
 #         raise ValidationError(f'Pick a later date')
@@ -106,19 +98,14 @@ class MeetingForm(forms.Form):
         self.proposals = kwargs.pop("proposals")
         super(MeetingForm, self).__init__(*args, **kwargs)
 
-        # TODO Reduce to singel DateTime field
+        # TODO Reduce to single DateTime field
         self.fields['leader'] = forms.CharField(widget=forms.HiddenInput(), initial=self.request.user.username)
         self.fields['date_time'] = forms.DateTimeField()
-        # self.fields['date'] = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}),
-        #                                       validators=[validate_meeting_date],
-        #                                       )
-
-        # self.fields['time'] = forms.TimeField(widget=forms.widgets.TimeInput(attrs={'type': 'time'}))
         self.fields['selected_proposal_ids'] =  forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                                                           choices=self.get_choices(),
                                                                           label="Select candidates for group election",
                                                                           validators=[validate_candidate_selection],
                                                                           )
-
+        
     def get_choices(self):
         return [(x.id, x.paper) for x in self.proposals]
