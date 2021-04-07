@@ -1,10 +1,14 @@
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, FormView, ListView
 
 from .models import Author, AuthorPaper, Paper
 from .forms import ArxivURLForm
-from .utils import get_arxiv_paper_data, process_arxiv_data, process_paper_url
+from .utils import get_arxiv_paper_data, get_random_arxiv_paper, process_arxiv_data, process_paper_url
+
+
+
 
 # TODO Change HomeView to include the add paper form instead of button
 class HomeView(ListView):
@@ -36,6 +40,12 @@ class AddPaperView(FormView):
         paper, authors = process_paper_url(url)
         return HttpResponseRedirect(reverse('papers:paper-detail', kwargs={'pk': paper.id}))
 
+    
+def random_paper_view(request):
+    paper = get_random_arxiv_paper()
+    # breakpoint()
+    return render(request, 'papers/paper_detail.html', {'paper': paper})
+    
 
 # TODO
 # class AddConfirmView(View):

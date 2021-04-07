@@ -6,7 +6,12 @@
 <h3><i>Improve group reading selections</i></h3>
 
 {% if user.is_authenticated %}
-<!-- <p>Logged in as: <b>{{ user.username }}</b></p> -->
+
+<p><b>{{ user.username }}</b>, go read some papers!</p>
+<p>Here's a <a href={% url 'papers:random-paper' %}>random paper</a> to mix things up</p>
+
+						     
+
 {% else %}
 <p>Please <a href="{% url 'login' %}">log in</a> or <a href="{% url 'accounts:register' %}">create an account</a> to participate.</p>
 {% endif %}

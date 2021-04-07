@@ -18,7 +18,7 @@ class Club(models.Model):
     name = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=50)
     members = models.ManyToManyField(User, through='ClubMember')
-
+    
 
     @property
     def meeting(self):

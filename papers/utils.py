@@ -1,4 +1,5 @@
-import pdb
+import random
+import urllib
 import urllib.request as libreq
 import re
 
@@ -74,4 +75,31 @@ def process_paper_url(url):
     data = get_arxiv_paper_data(url)
     paper, authors = process_arxiv_data(data)
     return paper, authors
+
+
+def generate_random_arxiv_url():
+    """
+    Info on arXiv identifiers: https://arxiv.org/help/arxiv_identifier
+    """
+    year = str(random.randint(2008, 2020))[2:]
+    month = random.randint(1,12)
+    month = "0" + str(month) if month < 10 else str(month)
+    id_num = str(random.randint(0, 5000))
+    id_size = 5 if int(year) < 15 else 4  # dictates number of leading zeros
+    while len(id_num) < id_size:
+        id_num = "0" + id_num
+        
+    return f"https://arxiv.org/abs/{year + month}.{id_num}"
     
+def get_random_arxiv_paper():
+    url = generate_random_arxiv_url()
+
+    while True:
+        try:
+            paper, authors = process_paper_url(url)
+            break
+        except urllib.error.HTTPError:
+            print('\n\nhahaha\n\n')
+            url = get_random_arxiv_paper() 
+
+    return paper
