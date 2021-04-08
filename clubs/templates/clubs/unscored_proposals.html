@@ -4,7 +4,11 @@
 <ul>
 {% for proposal, form in unscored %}
 <li><a href="{% url 'papers:paper-detail' proposal.paper.id %}">{{ proposal.paper }}</a></li>
-
+{% if proposal.msg %}
+<ul>
+  <li><i>"{{ proposal.msg }}"</i></li>
+</ul>
+{% endif %}
 
 <form method="POST" class="score-proposal-form", name="score-proposal-form">
   {% csrf_token %}

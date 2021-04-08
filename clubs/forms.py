@@ -75,12 +75,17 @@ class ProposalForm(forms.Form):
         self.fields['url'] = forms.URLField(max_length=50, label="arXiv paper URL")
         self.fields['score'] = forms.ChoiceField(label="Score", choices=SCORE_OPTIONS)
         self.fields['club'] = forms.ChoiceField(choices=[(club, club) for club in self.request.user.profile.clubs], initial=self.club)
-        self.fields['message'] = forms.CharField(max_length=300)
+        self.fields['message'] = forms.CharField(widget=forms.Textarea(attrs={'rows': 2}),
+                                                 max_length=300,
+                                                 required=False)
 
     def clean(self):
-        data = self.cleaned_data        
-        if Proposal.objects.filter(Q(paper__url=data['url']) | Q(paper__pdf_url=data['url'])):
+        data = self.cleaned_data
+
+        if Proposal.objects.filter(Q(paper__url=data['url']) | Q(paper__pdf_url=data['url']),
+                                   club=Club.objects.get(name=self.club)):
             raise ValidationError(f"A proposal for this paper already exists in {self.club}")
+        
 
 
 def validate_candidate_selection(selected_proposal_ids):

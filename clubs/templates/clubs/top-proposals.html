@@ -4,6 +4,12 @@
 <ol>
 {% for proposal in top_proposals %}
 <li><a href="{% url 'papers:paper-detail' proposal.id %}">{{ proposal.paper.title }}</a></li>
+{% if proposal.msg %}
+<ul>
+  <li><i>"{{ proposal.msg }}"</i></li>
+</ul>
+{% endif %}
 {% endfor %}
+
 </ol>
 </div>
