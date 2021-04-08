@@ -1,0 +1,1 @@
+ web: gunicorn paper_club.wsgi
