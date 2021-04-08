@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '06v7v1hzu3=1mvl+(=29r+sc_c2%5@
 # DEBUG = True
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'ajpkim-paper-club.herokuapp.com',]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'ajpkim-paper-club.herokuapp.com',]
 
 
 # Application definition
@@ -157,6 +157,11 @@ LOGIN_EXEMPT_URLS = (
     r'^admin/$',  # TODO change this to secret admin URL
     r'^login/$',
 )
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = DEBUG == False
 
 import dj_database_url
 DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
