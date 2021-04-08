@@ -12,7 +12,7 @@
     /* Fonts */
     --f-serif: "Crimson Text", serif;
     --f-sans-serif: "Ubuntu", sans-serif;
-    
+
     /* Colors */
     --c-cream: #FFFDD0;
     --c-lightgrey: #CCCCFF;
@@ -27,7 +27,7 @@
     --c-pink: #FEBEB0;
     --c-darkgreen: #3D5A5B;
     --c-darkblue: #2F365F;
-    
+
     /* Color Scheme 2 */
     --c-whitepurple: #f4eeff;
     --c-lightpurple: #dcd6f7;
@@ -40,7 +40,7 @@
     --c-border: black;
     --border-width: 4px;
     --c-btn-bg: white;
-    --c-bg: #fffafa;    
+    --c-bg: #fffafa;
     --c-link: var(--c-lightblue);
     --c-navBar-a: var(--c-purple);
     --c-navBar-a: black;
@@ -48,12 +48,17 @@
 
 
     --f-headers: var(--f-sans-serif)
-    
+
 }
+
 
 #container {
     max-width: 850px;
     margin: 25px auto 0px auto;
+}
+
+.inner-container {
+    margin: 3rem;
 }
 
 #content {
@@ -134,12 +139,18 @@ summary {
     font-size: 2rem;
 }
 
+.update-btn {
+    padding: 3px;
+    font-size: 1.6rem;
+}
+
+
 /* navBar */
 #navBar a {
     font-size: 2.5rem;
     color: var(--c-navBar-a);
     text-decoration: none;
-    
+
 }
 
 /* Meeting container contains the voting */
@@ -155,7 +166,7 @@ summary {
     padding: 1rem;
     display: flex;
     border: var(--border-width) solid var(--c-border);
-    
+
 }
 
 #vote-container #candidates {
@@ -177,11 +188,9 @@ summary {
     width: 10rem;
 }
 
-#vote-form button[type='submit'] {
+#vote-form button {
     background-color: var(--c-btn-bg);
-    padding: 0.5rem;
-    margin: 1rem;
-    height: 3rem;
+
 }
 
 #add-proposal-form {

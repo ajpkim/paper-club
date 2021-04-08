@@ -11,7 +11,7 @@ from django.utils import timezone
 
 from papers.forms import validate_arxiv_url
 
-from .models import Club
+from .models import Club, Meeting
 
 User = get_user_model()
 low, high = 1, 5
@@ -22,11 +22,11 @@ SCORE_OPTIONS = [(n, n) for n in range(low, high+1)]
 class ClubForm(forms.ModelForm):
     name = forms.CharField(max_length=50, label="Club Name")
     password = forms.CharField(max_length=50, widget=forms.PasswordInput)
-    
+
     class Meta:
         model = Club
         fields = ['name', 'password']
-    
+
 
 class JoinClubForm(forms.Form):
 
@@ -79,11 +79,10 @@ class ProposalForm(forms.Form):
         self.fields['club'] = forms.ChoiceField(choices=[(club, club) for club in self.request.user.profile.clubs])
         self.fields['message'] = forms.CharField(max_length=300)
 
-        
-# TODO validate datetime in future
-# def validate_meeting_date(date):
-#     if date < (timezone.now() + timedelta(days=+1)).date():
-#         raise ValidationError(f'Pick a later date')
+
+def validate_meeting_date(date_time):
+    if date_time < timezone.now():
+        raise ValidationError(f'Pick a future date')
 
 def validate_candidate_selection(selected_proposal_ids):
     num = 3
@@ -97,15 +96,30 @@ class MeetingForm(forms.Form):
         self.request = kwargs.pop("request")
         self.proposals = kwargs.pop("proposals")
         super(MeetingForm, self).__init__(*args, **kwargs)
-
-        # TODO Reduce to single DateTime field
         self.fields['leader'] = forms.CharField(widget=forms.HiddenInput(), initial=self.request.user.username)
-        self.fields['date_time'] = forms.DateTimeField()
+        self.fields['date_time'] = forms.DateTimeField(validators=[validate_meeting_date])
         self.fields['selected_proposal_ids'] =  forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                                                           choices=self.get_choices(),
                                                                           label="Select candidates for group election",
                                                                           validators=[validate_candidate_selection],
                                                                           )
-        
+
     def get_choices(self):
         return [(x.id, x.paper) for x in self.proposals]
+
+
+class MeetingUpdateForm(forms.Form):
+
+
+    def __init__(self, *args, **kwargs):
+        self.meeting = Meeting.objects.get(pk=kwargs.pop('pk'))
+        super(MeetingUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['pk'] = forms.CharField(widget=forms.HiddenInput(), initial=self.meeting.id)
+        self.fields['date_time'] = forms.DateTimeField(validators=[validate_meeting_date], initial=self.meeting.date_time)
+        self.fields['leader'] = forms.CharField(initial=self.meeting.leader)
+
+    def clean(self):
+        data = self.cleaned_data
+        if ( not User.objects.filter(username=data['leader']).exists() or
+             not User.objects.get(username=data['leader']) in self.meeting.club.members.all() ):
+             raise ValidationError('Invalid meeting leader')

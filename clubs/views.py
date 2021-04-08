@@ -6,15 +6,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, DetailView, FormView, ListView, TemplateView, UpdateView
-
-
+from django.views.generic import CreateView, DeleteView, DetailView, FormView, ListView, TemplateView, UpdateView
 
 from papers.utils import process_paper_url
-
 from .models import Candidate, Club, ClubMember, Election, Meeting, Score, Proposal, Vote
-from .forms import ClubForm, JoinClubForm, MeetingForm, ScoreForm, ProposalForm, VoteForm
-# from .utils import get_candidates_dict, get_user_clubs, get_unscored_proposals
+from .forms import ClubForm, JoinClubForm, MeetingForm, MeetingUpdateForm, ScoreForm, ProposalForm, VoteForm
+
 
 User = get_user_model()
 
@@ -25,6 +22,7 @@ class HomeView(ListView):
 
     def get_queryset(self):
         return [x.club for x in ClubMember.objects.filter(member=self.request.user)]
+    
 
 class ClubCreateView(CreateView):
     form_class = ClubForm
@@ -67,19 +65,18 @@ class ClubDetailView(View):
                                                                  ctx['vote_form'].visible_fields()))
         if ctx['unscored_proposals']:
             ctx['unscored'] = list(map(lambda proposal: (proposal, ScoreForm(proposal)), ctx['unscored_proposals']))
-            
+
         return ctx
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, self.get_context_data())
 
-    # TODO process forms appriorately
     def post(self, request, *args, **kwargs):
         data = request.POST
-        ### Process the VoteForm if that's whats in POST
+        # Process a VoteForm
         if 'election_id' in data:
             Vote.objects.process_vote_form(request)
-        ### Process the ScoreForm if that's what's in POST
+        # Process a ScoreForm
         elif 'score' in data:
             Score.objects.create(user = request.user,
                                  proposal = Proposal.objects.get(pk=int(data['proposal_id'])),
@@ -94,14 +91,13 @@ class MeetingDetailView(DetailView):
     template_name = "clubs/meeting-detail.html"
     model = Meeting
 
-    def get_context_data(self, *args, **kwargs):
-        pass
+    # def get_context_data(self, *args, **kwargs):
+    #     pass
     
 
 class PlanMeetingView(FormView):
 
     form_class = MeetingForm
-    # success_url = ('clubs/home')  # handled in form_valid
     template_name = 'clubs/plan-meeting.html'
 
     def get_club(self):
@@ -129,10 +125,40 @@ class PlanMeetingView(FormView):
 
         return HttpResponseRedirect(reverse("clubs:club-detail", kwargs={'club_name': self.get_club().name}))
 
-class MeetingUpdateView(UpdateView):
-    model = Meeting
-    fields = ['datetime', 'leader']
-    template_name_suffix = '_update_form'
+
+# TODO This meeting update/delete process is hacky and needs to be cleaned up
+class MeetingUpdateView(FormView):
+
+    form_class = MeetingUpdateForm
+    template_name = 'clubs/meeting-update.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(MeetingUpdateView, self).get_form_kwargs()
+        kwargs.update({'pk': self.kwargs['pk']})  # self.kwargs contains club_name and pk (meeting pk)
+        return kwargs
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+        meeting = Meeting.objects.get(pk=data['pk'])
+        meeting.date_time = data['date_time']
+        meeting.leader = User.objects.get(username=data['leader'])
+        meeting.save()
+
+        return HttpResponseRedirect(reverse("clubs:club-detail", kwargs={'club_name': meeting.club.name}))
+
+
+
+def meeting_delete(request, *args, **kwargs):
+    meeting = get_object_or_404(Meeting, pk=kwargs['pk'])
+    club = meeting.club
+    
+    if request.method == 'POST':
+        meeting.election.delete()
+        meeting.delete()
+        return HttpResponseRedirect(reverse('clubs:club-detail', kwargs={'club_name': meeting.club.name}))
+
+    return HttpResponseRedirect(club.get_absolute_url())
+    
 
 
     
@@ -144,7 +170,6 @@ class MeetingUpdateView(UpdateView):
 class ProposalView(FormView):
 
     form_class = ProposalForm
-    # success_url =  # handled in 
     template_name = 'clubs/add-proposal.html'
 
     def get_form_kwargs(self):

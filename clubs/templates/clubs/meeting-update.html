@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Update Meeting{% endblock title %}
+{% block content %}
+<div id="meeting-update-container">
+<h2>Update Upcoming Meeting</h2>
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="update-btn" value="Update">Update</button>
+</form>
+
+<form action="{% url 'clubs:meeting-delete' form.meeting.club.name form.meeting.id %}" method="post">
+  {% csrf_token %}
+  
+<button type="submit" class="update-btn" value="Delete">Delete</button>
+</form>
+
+</div>
+{% endblock content %}

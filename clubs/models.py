@@ -80,6 +80,9 @@ class Meeting(models.Model):
     paper = models.ForeignKey(Paper, on_delete=models.SET_NULL, null=True)
     date_time = models.DateTimeField()
 
+    def get_absolute_url(self):
+        return f'/clubs/{self.club}/meeting/{self.id}/'
+
     def __str__(self):
         return f'{self.club.name} Meeting on {self.date_time.strftime("%Y-%m-%d")}'
 
