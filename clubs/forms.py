@@ -6,12 +6,12 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core import validators
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.db.models import Q
 from django.urls import reverse
 from django.utils import timezone
 
-from papers.forms import validate_arxiv_url
 
-from .models import Club, Meeting
+from .models import Club, Meeting, Proposal
 
 User = get_user_model()
 low, high = 1, 5
@@ -70,14 +70,17 @@ class ProposalForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
+        self.club = kwargs.pop("club")
         super(ProposalForm, self).__init__(*args, **kwargs)
-        self.fields['url'] = forms.URLField(max_length=50,
-                                            label="arXiv paper URL",
-                                            validators=[validate_arxiv_url]
-                                            )
+        self.fields['url'] = forms.URLField(max_length=50, label="arXiv paper URL")
         self.fields['score'] = forms.ChoiceField(label="Score", choices=SCORE_OPTIONS)
-        self.fields['club'] = forms.ChoiceField(choices=[(club, club) for club in self.request.user.profile.clubs])
+        self.fields['club'] = forms.ChoiceField(choices=[(club, club) for club in self.request.user.profile.clubs], initial=self.club)
         self.fields['message'] = forms.CharField(max_length=300)
+
+    def clean(self):
+        data = self.cleaned_data        
+        if Proposal.objects.filter(Q(paper__url=data['url']) | Q(paper__pdf_url=data['url'])):
+            raise ValidationError(f"A proposal for this paper already exists in {self.club}")
 
 
 def validate_meeting_date(date_time):
@@ -110,7 +113,6 @@ class MeetingForm(forms.Form):
 
 class MeetingUpdateForm(forms.Form):
 
-
     def __init__(self, *args, **kwargs):
         self.meeting = Meeting.objects.get(pk=kwargs.pop('pk'))
         super(MeetingUpdateForm, self).__init__(*args, **kwargs)
@@ -121,5 +123,5 @@ class MeetingUpdateForm(forms.Form):
     def clean(self):
         data = self.cleaned_data
         if ( not User.objects.filter(username=data['leader']).exists() or
-             not User.objects.get(username=data['leader']) in self.meeting.club.members.all() ):
+             User.objects.get(username=data['leader']) not in self.meeting.club.members.all() ):
              raise ValidationError('Invalid meeting leader')

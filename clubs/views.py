@@ -12,9 +12,7 @@ from papers.utils import process_paper_url
 from .models import Candidate, Club, ClubMember, Election, Meeting, Score, Proposal, Vote
 from .forms import ClubForm, JoinClubForm, MeetingForm, MeetingUpdateForm, ScoreForm, ProposalForm, VoteForm
 
-
 User = get_user_model()
-
 
 class HomeView(ListView):
     template_name = 'clubs/home.html'
@@ -22,7 +20,7 @@ class HomeView(ListView):
 
     def get_queryset(self):
         return [x.club for x in ClubMember.objects.filter(member=self.request.user)]
-    
+
 
 class ClubCreateView(CreateView):
     form_class = ClubForm
@@ -30,11 +28,11 @@ class ClubCreateView(CreateView):
 
     def form_valid(self, form):
         data = form.cleaned_data
-        club = Club.objects.create(name=data['name'])
-        ClubMember.objects.create(member=self.request.user, club=club, password=data['password'])
+        club = Club.objects.create(name=data['name'], password=data['password'])
+        ClubMember.objects.create(member=self.request.user, club=club)
         return HttpResponseRedirect(reverse("clubs:club-detail", kwargs={'club_name': club.name}))
 
-    
+
 class ClubJoinView(FormView):
     form_class = JoinClubForm
     template_name = 'clubs/join-club.html'
@@ -46,7 +44,7 @@ class ClubJoinView(FormView):
         if self.request.user not in club.members.all():
             ClubMember.objects.create(club=club, member=self.request.user)
         return HttpResponseRedirect(reverse("clubs:club-detail", kwargs={'club_name': club.name}))
-        
+
 
 class ClubDetailView(View):
     template_name = 'clubs/club-detail.html'
@@ -83,17 +81,17 @@ class ClubDetailView(View):
                                  score = int(data['score']),
                                  club = self.get_club(),
                                  )
-                                 
+
         return HttpResponseRedirect(reverse("clubs:club-detail", kwargs={'club_name': self.get_club().name}))
 
-# TODO 
+# TODO
 class MeetingDetailView(DetailView):
     template_name = "clubs/meeting-detail.html"
     model = Meeting
 
-    # def get_context_data(self, *args, **kwargs):
-    #     pass
-    
+    def get_context_data(self, *args, **kwargs):
+        pass
+
 
 class PlanMeetingView(FormView):
 
@@ -102,7 +100,7 @@ class PlanMeetingView(FormView):
 
     def get_club(self):
         return Club.objects.filter(name=self.kwargs['club_name']).first()
-    
+
     def get_form_kwargs(self):
         kwargs = super(PlanMeetingView, self).get_form_kwargs()
         kwargs.update({'request': self.request,
@@ -126,7 +124,6 @@ class PlanMeetingView(FormView):
         return HttpResponseRedirect(reverse("clubs:club-detail", kwargs={'club_name': self.get_club().name}))
 
 
-# TODO This meeting update/delete process is hacky and needs to be cleaned up
 class MeetingUpdateView(FormView):
 
     form_class = MeetingUpdateForm
@@ -147,26 +144,18 @@ class MeetingUpdateView(FormView):
         return HttpResponseRedirect(reverse("clubs:club-detail", kwargs={'club_name': meeting.club.name}))
 
 
-
 def meeting_delete(request, *args, **kwargs):
     meeting = get_object_or_404(Meeting, pk=kwargs['pk'])
     club = meeting.club
-    
+
     if request.method == 'POST':
         meeting.election.delete()
         meeting.delete()
         return HttpResponseRedirect(reverse('clubs:club-detail', kwargs={'club_name': meeting.club.name}))
 
     return HttpResponseRedirect(club.get_absolute_url())
-    
 
 
-    
-    
-    
-
-
-# TODO move as much of this logic and processing out of views.py
 class ProposalView(FormView):
 
     form_class = ProposalForm
@@ -174,10 +163,15 @@ class ProposalView(FormView):
 
     def get_form_kwargs(self):
         kwargs = super(ProposalView, self).get_form_kwargs()
-        kwargs.update({'request': self.request})
+        kwargs.update({'request': self.request,
+                       'club': self.kwargs['club_name'],
+                       })
         return kwargs
 
     def form_valid(self, form):
+        """
+        Create corresponding Paper, Author, Proposal, and Score database entries.
+        """
         data = form.cleaned_data
         url = data['url']
         user = self.request.user
@@ -185,22 +179,15 @@ class ProposalView(FormView):
         msg = data['message']
         paper, authors = process_paper_url(url)
 
-        if not Proposal.objects.filter(paper=paper, club=club).exists():
+        proposal = Proposal.objects.create(user=user,
+                                           paper=paper,
+                                           club=club,
+                                           msg=msg,
+                                           )
+        Score.objects.create(user=user,
+                             proposal=proposal,
+                             score=data['score'],
+                             club=club,
+                             )
 
-            proposal = Proposal.objects.create(user = user,
-                                    paper = paper,
-                                    club = club,
-                                    msg = msg
-                                    )
-
-            Score.objects.create(user=user,
-                                 proposal=proposal,
-                                 score=data['score'],
-                                 club=club,
-                                 )
-
-            return HttpResponseRedirect(reverse('clubs:club-detail', kwargs={'club_name': club.name}))
-
-        else:
-            # TODO add a message about proposal duplication
-            return HttpResponseRedirect(reverse('clubs:club-detail', kwargs={'club_name': club.name}))
+        return HttpResponseRedirect(reverse('clubs:club-detail', kwargs={'club_name': club.name}))
