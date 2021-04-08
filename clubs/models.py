@@ -127,11 +127,6 @@ class Election(models.Model):
                'candidates': dict(zip(string.ascii_uppercase,
                                       [c for c in self.candidates.all()])),
                }
-        
-        # if not self.is_over and not ctx['voted']:
-        #     ctx['vote_form'] = VoteForm(election=self)
-        #     ctx['voteform_fields_candidates_zip'] = list(zip(self.candidates.all(),
-        #                                                      ctx['vote_form'].visible_fields()))
 
         return ctx
 

@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 import string
 
 from django import forms
@@ -83,10 +83,6 @@ class ProposalForm(forms.Form):
             raise ValidationError(f"A proposal for this paper already exists in {self.club}")
 
 
-def validate_meeting_date(date_time):
-    if date_time < timezone.now():
-        raise ValidationError(f'Pick a future date')
-
 def validate_candidate_selection(selected_proposal_ids):
     num = 3
     if len(selected_proposal_ids) != num:
@@ -98,17 +94,26 @@ class MeetingForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         self.proposals = kwargs.pop("proposals")
+        self.num_candidates = 3
         super(MeetingForm, self).__init__(*args, **kwargs)
         self.fields['leader'] = forms.CharField(widget=forms.HiddenInput(), initial=self.request.user.username)
-        self.fields['date_time'] = forms.DateTimeField(validators=[validate_meeting_date])
+        self.fields['date'] = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+        self.fields['time'] = forms.TimeField(widget=forms.widgets.TimeInput(attrs={'type': 'time'}))
         self.fields['selected_proposal_ids'] =  forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                                                           choices=self.get_choices(),
-                                                                          label="Select candidates for group election",
+                                                                          label=f"Select {self.num_candidates} candidates for group election",
                                                                           validators=[validate_candidate_selection],
                                                                           )
 
     def get_choices(self):
         return [(x.id, x.paper) for x in self.proposals]
+
+    # TODO check if I need to be aware of timezone info
+    def clean(self):
+        data = self.cleaned_data
+        if datetime.now() > datetime.combine(data['date'], data['time']):
+            raise ValidationError(f'Pick a future date')
+        
 
 
 class MeetingUpdateForm(forms.Form):
@@ -117,11 +122,18 @@ class MeetingUpdateForm(forms.Form):
         self.meeting = Meeting.objects.get(pk=kwargs.pop('pk'))
         super(MeetingUpdateForm, self).__init__(*args, **kwargs)
         self.fields['pk'] = forms.CharField(widget=forms.HiddenInput(), initial=self.meeting.id)
-        self.fields['date_time'] = forms.DateTimeField(validators=[validate_meeting_date], initial=self.meeting.date_time)
+        self.fields['date'] = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}),
+                                              initial=self.meeting.date_time.date())
+        self.fields['time'] = forms.TimeField(widget=forms.widgets.TimeInput(attrs={'type': 'time'}),
+                                              initial=self.meeting.date_time.time())
         self.fields['leader'] = forms.CharField(initial=self.meeting.leader)
 
     def clean(self):
         data = self.cleaned_data
+
         if ( not User.objects.filter(username=data['leader']).exists() or
              User.objects.get(username=data['leader']) not in self.meeting.club.members.all() ):
              raise ValidationError('Invalid meeting leader')
+         
+        if datetime.now() > datetime.combine(data['date'], data['time']):
+            raise ValidationError(f'Pick a future date')

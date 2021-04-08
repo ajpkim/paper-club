@@ -1,3 +1,4 @@
+from datetime import datetime
 import string
 
 from django.contrib.auth import get_user_model
@@ -118,7 +119,7 @@ class PlanMeetingView(FormView):
         Meeting.objects.create(club=self.get_club(),
                                leader=User.objects.get(username=data['leader']),
                                election=election,
-                               date_time=data['date_time'],
+                               date_time=datetime.combine(data['date'], data['time']),
                                )
 
         return HttpResponseRedirect(reverse("clubs:club-detail", kwargs={'club_name': self.get_club().name}))
@@ -137,7 +138,7 @@ class MeetingUpdateView(FormView):
     def form_valid(self, form):
         data = form.cleaned_data
         meeting = Meeting.objects.get(pk=data['pk'])
-        meeting.date_time = data['date_time']
+        meeting.date_time = datetime.combine(data['date'], data['time'])
         meeting.leader = User.objects.get(username=data['leader'])
         meeting.save()
 
