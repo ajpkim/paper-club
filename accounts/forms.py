@@ -8,10 +8,13 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class RegistrationForm(UserCreationForm):
+class UserCreateForm(UserCreationForm):
 
     email = forms.EmailField(max_length=200, required=False, help_text='(Optional for account recovery)')
-
+    password1 = forms.CharField(label='Enter password', 
+                                widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Confirm password', 
+                                widget=forms.PasswordInput)
     class Meta:
         model = User
         fields = [

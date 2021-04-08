@@ -2,9 +2,9 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView
 
-from .forms import RegistrationForm
+from .forms import UserCreateForm
 
 class RegisterView(CreateView):
-    form_class = RegistrationForm
+    form_class = UserCreateForm
     success_url = reverse_lazy('login')
     template_name = 'registration/register.html'
