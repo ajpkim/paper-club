@@ -55,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # login middlware
+    'paper_club.middleware.LoginRequiredMiddleware'
 ]
 
 ROOT_URLCONF = 'paper_club.urls'
@@ -138,3 +140,10 @@ AUTH_PROFILE_MODEL = 'profiles.Profile'
 
 LOGIN_REDIRECT_URL = '/clubs/'
 LOGOUT_REDIRECT_URL = '/'
+
+LOGIN_EXEMPT_URLS = (
+    r'^$',
+    r'^about/$',
+    r'^accounts/register/$',
+    r'^admin/',  # TODO change this to secret admin URL
+)
