@@ -1,27 +1,25 @@
 {% extends 'base.html' %}
-
+{% block title %}About{% endblock title %}
 {% block content %}
+<!-- <h1>About</h1> -->
+<p>This site was created by <a href="https://ajpkim.com">Alex Kim</a>.</p>
+<p>Browse source code, report bugs, and contribute <a href="https://github.com/ajpkim/paper-club">here</a>.</p>
 <div id="about-how-to">
-<h2>Paper Club how to:</h2>
+  
+  <h2>Paper Club how to:</h2>
 
-<ol>
-  <li>Create or join a club</li>
-  <li>Contribute and score paper proposals within a club based on interest</li>
-  <li>Plan a meeting and initiate paper election to detemine meeting reading</li>
-  <ul>
-    <li>Planner selects candidate papers from among the club's highest scoring proposals</li>
+  <ol>
+    <li>Create or join a club</li>
+    <li>Contribute and score paper proposals within a club based on interest</li>
+    <li>Plan a meeting and initiate paper election to detemine meeting reading</li>
+    <ul>
+      <li>Planner selects candidate papers from among the club's highest scoring proposals</li>
     </ul>
-  <li>Vote in election to detemine the paper for the upcoming meeting</li>
-  <li>Read the winning paper</li>
-  <li>Meet to share thoughts, questions, and ideas!</li>
-  <li>Repeat steps 2-7</li>
-</ol>
-
-<h3>Info</h3>
-<ul>
-  <li>Created by: <a href="https://ajpkim.com">Alex Kim</a></li>
-  <li><a href="https://github.com/ajpkim/paper-club">Site source code</a></li>
-</ul>
+    <li>Vote in election to detemine the paper for the upcoming meeting</li>
+    <li>Read the winning paper</li>
+    <li>Meet to share thoughts, questions, and ideas!</li>
+    <li>Repeat steps 2-6</li>
+  </ol>
 
 </div>
 {% endblock content %}
