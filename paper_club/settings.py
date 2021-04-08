@@ -147,6 +147,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 AUTH_USER_MODEL = 'accounts.User'
 AUTH_PROFILE_MODEL = 'profiles.Profile'
 
+ADMIN_URL = os.environ.get('DJANGO_ADMIN', 'admin')
 LOGIN_REDIRECT_URL = '/clubs/'
 LOGOUT_REDIRECT_URL = '/'
 
@@ -154,7 +155,7 @@ LOGIN_EXEMPT_URLS = (
     r'^$',
     r'^about/$',
     r'^accounts/register/$',
-    r'^admin/$',  # TODO change this to secret admin URL
+    r'^{}/'.format(ADMIN_URL),
     r'^login/$',
 )
 
@@ -163,5 +164,6 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = DEBUG == False
 
-import dj_database_url
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+if not DEBUG:
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
