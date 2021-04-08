@@ -12,28 +12,14 @@
     /* Fonts */
     --f-serif: "Crimson Text", serif;
     --f-sans-serif: "Ubuntu", sans-serif;
+    --f-mono: "Source Code Pro", mono;
 
     /* Colors */
     --c-cream: #FFFDD0;
     --c-lightgrey: #CCCCFF;
     --c-lightgreen: #DCFAE1;
-    --c-green: #91F7A4;
-    --c-grey: #CCCCCC;
     --c-purple: #CC33FF;
     --c-lightblue: #8dc2ee;
-
-    /* Color Scheme */
-    --c-grey: #F7F1ED;
-    --c-pink: #FEBEB0;
-    --c-darkgreen: #3D5A5B;
-    --c-darkblue: #2F365F;
-
-    /* Color Scheme 2 */
-    --c-whitepurple: #f4eeff;
-    --c-lightpurple: #dcd6f7;
-    --c-teal: #a6b1e1;
-    --c-darkblue: #424874;
-
     --c-snow: #f5fefd;
 
     /* Elements */
@@ -46,7 +32,7 @@
     --c-navBar-a: black;
     --c-main-text: black;
 
-
+    
     --f-headers: var(--f-sans-serif)
 
 }
@@ -112,6 +98,7 @@ button {
     margin: 1rem;
     padding: 1rem;
     font-size: 2rem;
+    font-family: var(--f-mono);
 }
 
 summary {
@@ -217,7 +204,6 @@ summary {
 .score-proposal-form button {
     padding: 0.5rem;
     margin: 1rem;
-    height: 3rem;
     font-size: 1.6rem;
 }
 

@@ -145,5 +145,6 @@ LOGIN_EXEMPT_URLS = (
     r'^$',
     r'^about/$',
     r'^accounts/register/$',
-    r'^admin/',  # TODO change this to secret admin URL
+    r'^admin/$',  # TODO change this to secret admin URL
+    r'^login/$',
 )
