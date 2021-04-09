@@ -18,7 +18,6 @@ low, high = 1, 5
 SCORE_OPTIONS = [(n, n) for n in range(low, high+1)]
 
 
-
 class ClubForm(forms.ModelForm):
     name = forms.CharField(max_length=50, label="Club Name")
     password = forms.CharField(max_length=50, widget=forms.PasswordInput)
@@ -93,7 +92,7 @@ def validate_candidate_selection(selected_proposal_ids):
     if len(selected_proposal_ids) != num:
         raise ValidationError(f'Select {num} proposals')
 
-
+        
 class MeetingForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
@@ -113,11 +112,14 @@ class MeetingForm(forms.Form):
     def get_choices(self):
         return [(x.id, x.paper) for x in self.proposals]
 
-    # TODO check if I need to be aware of timezone info
     def clean(self):
+        """
+        "Handles invalid 5 digit date input by ensuring a valid data object is available for comparison
+        and checks if given datetime in future
+        """
         data = self.cleaned_data
-        if datetime.now() > datetime.combine(data['date'], data['time']):
-            raise ValidationError(f'Pick a future date')
+        if 'date' in data and datetime.now() > datetime.combine(data['date'], data['time']):
+            raise ValidationError(f'Pick a valid date')
         
 
 
@@ -140,5 +142,5 @@ class MeetingUpdateForm(forms.Form):
              User.objects.get(username=data['leader']) not in self.meeting.club.members.all() ):
              raise ValidationError('Invalid meeting leader')
          
-        if datetime.now() > datetime.combine(data['date'], data['time']):
+        if 'date' in data and datetime.now() > datetime.combine(data['date'], data['time']):
             raise ValidationError(f'Pick a future date')
