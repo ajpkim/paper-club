@@ -101,7 +101,7 @@ class Proposal(models.Model):
 class Election(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     start_datetime = models.DateTimeField(auto_now_add=True)
-    end_datetime = models.DateTimeField(default=(timezone.now() + timedelta(days=+2)))
+    end_datetime = models.DateTimeField()
     candidates = models.ManyToManyField(Proposal, through="Candidate", related_name="candidates")
     winner = models.ForeignKey(Proposal, null=True, blank=True, on_delete=models.SET_NULL, related_name="winner")
 
