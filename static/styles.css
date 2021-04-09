@@ -16,7 +16,6 @@
 
     /* Colors */
     --c-cream: #FFFDD0;
-    --c-lightgrey: #CCCCFF;
     --c-lightgreen: #DCFAE1;
     --c-purple: #CC33FF;
     --c-lightblue: #8dc2ee;
@@ -40,7 +39,7 @@
 
 #container {
     max-width: 850px;
-    margin: 25px auto 0px auto;
+    margin: 2.5rem auto 0; auto;
 }
 
 .inner-container {
@@ -48,15 +47,17 @@
 }
 
 #content {
-    padding-top: 4rem;
+    margin: 5rem 0;
 }
 
 body {
     font-size: 1.8rem;
-    background: var(--c-lightgrey);
     background: white;
     line-height: 1.5;
     font-family: var(--f-sans-serif);
+    /* margin-bottom: 10rem; */
+    /* padding-bottom: 10rem; */
+    /* background: red; */
 }
 
 h1 {
@@ -181,7 +182,6 @@ summary {
 }
 
 #add-proposal-form {
-
 }
 
 /* Scoring Proposals */
