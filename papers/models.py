@@ -13,7 +13,7 @@ class Paper(models.Model):
     arxiv_id = models.CharField(max_length=20)
     title = models.CharField(max_length=500)
     authors = models.ManyToManyField('Author', through='AuthorPaper')
-    abstract = models.CharField(max_length=1000)
+    abstract = models.CharField(max_length=5000)
     key_words = models.ManyToManyField('KeyWord', through='KeyWordPaper')
     published = models.DateField()
 
@@ -49,14 +49,3 @@ class KeyWordPaper(models.Model):
 
     def  __str__(self):
         return f'{self.key_word}: {self.paper}'
-
-
-# TODO: Create Club model in the Clubs app
-# class Proposal(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.SET_NULL)
-#     paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
-#     group = models.ForeignKey(Club, on_delete=models.SET_NULL)
-#     create_time = models.DateTimeField(auto_now_add=True)
-
-    # def  __str__(self):
-    #     return f'Proposal: {self.username} ---> {self.title}'
