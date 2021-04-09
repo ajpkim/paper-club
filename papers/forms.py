@@ -1,14 +1,15 @@
 import re
 
+import urllib.request as libreq
+from urllib.error import HTTPError
+
 from django import forms
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core import validators
 from django.db import models
 
-from django.contrib.auth import get_user_model
 User = get_user_model()
-
-# class AddPaperForm(forms.ModelForm):
 
 def validate_arxiv_url(url):
     """
@@ -21,6 +22,12 @@ def validate_arxiv_url(url):
             f'{url} is not a valid arXiv.org abstract or pdf page',
             params={'url': url}
         )
+    try:
+        libreq.urlopen(url)
+    except HTTPError:
+        raise ValidationError(f'{url} is not a valid arXiv.org abstract or pdf page',
+                              params={'url': url})
+    
 
 class ArxivURLForm(forms.Form):
     url = forms.URLField(max_length=50,
