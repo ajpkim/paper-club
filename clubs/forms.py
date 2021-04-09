@@ -10,7 +10,7 @@ from django.db.models import Q
 from django.urls import reverse
 from django.utils import timezone
 
-
+from papers.forms import validate_arxiv_url
 from .models import Club, Meeting, Proposal
 
 User = get_user_model()
@@ -65,6 +65,7 @@ class ScoreForm(forms.Form):
         self.fields['score'] = forms.ChoiceField(choices=SCORE_OPTIONS, label="")
         self.fields['proposal_id'] = forms.CharField(widget=forms.HiddenInput(), initial=self.proposal.id)
 
+        
 
 class ProposalForm(forms.Form):
 
@@ -72,7 +73,7 @@ class ProposalForm(forms.Form):
         self.request = kwargs.pop("request")
         self.club = kwargs.pop("club")
         super(ProposalForm, self).__init__(*args, **kwargs)
-        self.fields['url'] = forms.URLField(max_length=50, label="arXiv paper URL")
+        self.fields['url'] = forms.URLField(max_length=50, label="arXiv paper URL", validators=[validate_arxiv_url])
         self.fields['score'] = forms.ChoiceField(label="Score", choices=SCORE_OPTIONS)
         self.fields['club'] = forms.ChoiceField(choices=[(club, club) for club in self.request.user.profile.clubs], initial=self.club)
         self.fields['message'] = forms.CharField(widget=forms.Textarea(attrs={'rows': 2}),
@@ -81,11 +82,10 @@ class ProposalForm(forms.Form):
 
     def clean(self):
         data = self.cleaned_data
-
-        if Proposal.objects.filter(Q(paper__url=data['url']) | Q(paper__pdf_url=data['url']),
-                                   club=Club.objects.get(name=self.club)):
+        if 'url' in data and Proposal.objects.filter(Q(paper__url=data['url']) | Q(paper__pdf_url=data['url']),
+                                                     club=Club.objects.get(name=self.club)).exists():
             raise ValidationError(f"A proposal for this paper already exists in {self.club}")
-        
+
 
 
 def validate_candidate_selection(selected_proposal_ids):

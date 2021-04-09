@@ -18,7 +18,7 @@ def validate_arxiv_url(url):
     pat = r"^https://arxiv.org/(abs/|pdf/){1}"
     if not re.match(pat, url):
         raise ValidationError(
-            f'"{url}" is not an arXiv.org abstract or pdf page',
+            f'{url} is not a valid arXiv.org abstract or pdf page',
             params={'url': url}
         )
 
