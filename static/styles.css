@@ -107,6 +107,11 @@ summary {
 
 }
 
+ol li {
+    margin-top: 1rem; 
+
+}
+
 /* Horizontal list */
 .hlist ol li {
     display: inline-block;
