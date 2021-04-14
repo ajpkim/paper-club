@@ -10,7 +10,6 @@ Live at [[https://ajpkim-paper-club.herokuapp.com/][ajpkim-paper-club.herokuapp.
 
 Club members propose papers to the club.
 
-#+ATTR_HTML
 [[file:img/propose-paper.png]]
 
 *** Score
