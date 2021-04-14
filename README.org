@@ -10,8 +10,6 @@ Live at [[https://ajpkim-paper-club.herokuapp.com/][ajpkim-paper-club.herokuapp.
 
 Club members propose papers to the club.
 
-[[file:img/propose-paper.png]]
-
 *** Score
 
 Club members score other's proposals. Top-scoring proposals are tracked and visible.
@@ -20,4 +18,9 @@ Club members score other's proposals. Top-scoring proposals are tracked and visi
 
 When a meeting is scheduled, the organizer (meeting "leader") chooses several proposals from the top-scoring pool of papers to serve as candidates for the upcoming meeting. Club members vote on these candidates to select to the group reading for the meeting.
 
+
+** Snapshot
+
+#+html: <p align="center"><img src="img/overview-1.png" /></p>
+#+html: <p align="center"><img src="img/overview-2.png" /></p>
 
