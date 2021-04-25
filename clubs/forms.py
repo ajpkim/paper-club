@@ -92,7 +92,10 @@ def validate_candidate_selection(selected_proposal_ids):
     if len(selected_proposal_ids) != num:
         raise ValidationError(f'Select {num} proposals')
 
-        
+def validate_election_length(length):
+    if length <= 0:
+        raise ValidationError(f'Pick a valid election length')
+    
 class MeetingForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
@@ -101,8 +104,9 @@ class MeetingForm(forms.Form):
         self.num_candidates = 3
         super(MeetingForm, self).__init__(*args, **kwargs)
         self.fields['leader'] = forms.CharField(widget=forms.HiddenInput(), initial=self.request.user.username)
-        self.fields['date'] = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
-        self.fields['time'] = forms.TimeField(widget=forms.widgets.TimeInput(attrs={'type': 'time'}))
+        self.fields['date'] = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}), label="Meeting date")
+        self.fields['time'] = forms.TimeField(widget=forms.widgets.TimeInput(attrs={'type': 'time'}), label="Meeting time")
+        self.fields['election_length'] = forms.IntegerField(validators=[validate_election_length], label='Election length (days)')
         self.fields['selected_proposal_ids'] =  forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                                                           choices=self.get_choices(),
                                                                           label=f"Select {self.num_candidates} candidates for group election",

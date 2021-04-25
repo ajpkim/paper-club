@@ -2,6 +2,7 @@
 <div id="meeting-container">
   <p><b>When: </b>{{ meeting.date_time }}</p>
   {% if club.election %}
+  <p>Hours left in election: {{ election.hours_left }}</p>
   {% include 'clubs/update-meeting-btn.html' %}
   {% if voted %}
   <details>
@@ -21,4 +22,3 @@
   {% include 'clubs/update-meeting-btn.html' %}
   {% endif %}
 </div>
-

@@ -1,4 +1,4 @@
-<h2>Vote</h2>
+<h2>Vote</h2> 
 <div id="vote-container">
   <form method="POST" id="vote-form"  name="vote-form">
     {% csrf_token %}
@@ -9,7 +9,6 @@
   <div id="candidates">
     {% for i, candidate in candidates.items %}
     <p><b>{{ i }}:</b> <a href="{% url 'papers:paper-detail' candidate.paper.id %}">{{ candidate.paper.title }}</a>
-      <!-- <p><a href="{% url 'papers:paper-detail' candidate.paper.id %}">{{ candidate.paper.title }}</a> -->
       {% endfor %}
   </div>
 </div>

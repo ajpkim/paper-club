@@ -113,7 +113,7 @@ class PlanMeetingView(FormView):
     def form_valid(self, form):
         data = form.cleaned_data
         election = Election.objects.create(club=self.get_club(),
-                                           end_datetime=timezone.now() + timedelta(days=+2))
+                                           end_datetime=timezone.now() + timedelta(days=+data['election_length']))
 
         for prop_id in data['selected_proposal_ids']:
             Candidate.objects.create(election=election, proposal=Proposal.objects.get(pk=int(prop_id)))

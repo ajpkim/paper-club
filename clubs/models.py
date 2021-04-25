@@ -18,24 +18,28 @@ class Club(models.Model):
     name = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=50)
     members = models.ManyToManyField(User, through='ClubMember')
-    
 
     @property
     def meeting(self):
-       """Return the current active meeting or None"""
-       return Meeting.objects.filter(club=self, date_time__gte=timezone.now()).last()
+        """Return the current active meeting or None"""
+        meeting = Meeting.objects.filter(club=self, date_time__gte=timezone.now()).last()
+        if meeting and not self.election and not meeting.paper:
+            # No votes in the most recent election. Need to declare a default winner and meeting paper.
+            election = self.elections.last()
+            election.declare_winner(election.candidates.first())  
+            meeting.paper = election.winner.paper
+            meeting.save()
+        return meeting
 
     @property
     def election(self):
         """Return an active election instance or None if there isn't one"""
         election = Election.objects.filter(club=self, end_datetime__gte=timezone.now()).last()
-        if election and election.is_over:
-            return None
-        return election  # Can also return None
+        return election if election and not election.is_over else None
 
     @property
     def elections(self):
-        return Election.objects.filter(club=self).order_by(end_date)
+        return Election.objects.filter(club=self).order_by('end_datetime')
 
     @property
     def proposals(self):
@@ -122,6 +126,11 @@ class Election(models.Model):
     def num_ballots(self):
         return Vote.objects.filter(election=self).count() / self.candidates.all().count()
 
+    @property
+    def hours_left(self):
+        if not self.is_over:
+            return (self.end_datetime - timezone.now()).total_seconds() // 3600
+
     def get_ctx(self, user):
         ctx = {'voted': True if Vote.objects.filter(user=user, election=self).exists() else False,
                'candidates': dict(zip(string.ascii_uppercase,
@@ -130,8 +139,8 @@ class Election(models.Model):
 
         return ctx
 
-    def declare_winner(self):
-        winner = None
+    def declare_winner(self, proposal=None):
+        winner = None or proposal
         best = -1
         for candidate in self.candidates.all():
             votes = Vote.objects.filter(election=self, proposal=candidate)
