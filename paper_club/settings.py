@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '06v7v1hzu3=1mvl+(=29r+sc_c2%5@
 # DEBUG = True
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'ajpkim-paper-club.herokuapp.com',]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'ajpkim-paper-club.herokuapp.com', 'paperclub.fun', 'www.paperclub.fun']
 
 
 # Application definition

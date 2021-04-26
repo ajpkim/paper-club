@@ -1,6 +1,6 @@
 * Paper Club
 
-Paper Club is a simple tool to help paper reading groups find overlapping interests and select better papers. This leads to improved discussions and club longevity. Currently only supports papers from [[https://arxiv.org/][arXiv]]. The site it live at [[https://ajpkim-paper-club.herokuapp.com/][ajpkim-paper-club.herokuapp.com]] and was built with Django and Python.
+Paper Club is a simple tool to help paper reading groups find overlapping interests and select better papers. This leads to improved discussions and club longevity. Currently only supports papers from [[https://arxiv.org/][arXiv]]. The site is [[https://paperclub.fun][paperclub.fun]] and was built with Django and Python.
 
 * How it works
 
